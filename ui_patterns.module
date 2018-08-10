@@ -20,6 +20,10 @@ function ui_patterns_theme() {
     'patterns_use_wrapper' => [
       'variables' => ['use' => NULL],
     ],
+    // Placeholder to allow generic preprocess usage.
+    'pattern' => [
+      'variables' => [],
+    ],
   ];
 
   foreach (UiPatterns::getManager()->getPatterns() as $pattern) {

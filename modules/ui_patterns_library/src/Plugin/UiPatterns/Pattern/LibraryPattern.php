@@ -2,6 +2,7 @@
 
 namespace Drupal\ui_patterns_library\Plugin\UiPatterns\Pattern;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\ui_patterns\Definition\PatternDefinition;
@@ -32,8 +33,8 @@ class LibraryPattern extends PatternBase {
   /**
    * UiPatternsManager constructor.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $root, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $root, $module_handler);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $root, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory, ThemeHandlerInterface $theme_handler) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $root, $module_handler, $config_factory);
     $this->themeHandler = $theme_handler;
   }
 
@@ -47,6 +48,7 @@ class LibraryPattern extends PatternBase {
       $plugin_definition,
       $container->get('app.root'),
       $container->get('module_handler'),
+      $container->get('config.factory'),
       $container->get('theme_handler')
     );
   }

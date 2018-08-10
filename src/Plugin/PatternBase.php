@@ -3,6 +3,7 @@
 namespace Drupal\ui_patterns\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\ui_patterns\Definition\PatternDefinition;
@@ -30,12 +31,20 @@ abstract class PatternBase extends PluginBase implements PatternInterface, Conta
   protected $moduleHandler;
 
   /**
+   * Module configuration settings.
+   *
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $config;
+
+  /**
    * UiPatternsManager constructor.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $root, ModuleHandlerInterface $module_handler) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $root, ModuleHandlerInterface $module_handler, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->root = $root;
     $this->moduleHandler = $module_handler;
+    $this->config = $config_factory->get('ui_patterns.settings');
   }
 
   /**
@@ -47,7 +56,8 @@ abstract class PatternBase extends PluginBase implements PatternInterface, Conta
       $plugin_id,
       $plugin_definition,
       $container->get('app.root'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('config.factory')
     );
   }
 
@@ -57,6 +67,7 @@ abstract class PatternBase extends PluginBase implements PatternInterface, Conta
   public function getThemeImplementation() {
     $definition = $this->getPluginDefinition();
     $item = [];
+    $item += $this->processTemplate($definition);
     $item += $this->processVariables($definition);
     $item += $this->processUseProperty($definition);
     return [
@@ -119,6 +130,25 @@ abstract class PatternBase extends PluginBase implements PatternInterface, Conta
         }
       }
     }
+  }
+
+  /**
+   * Sets the base template file according to backward compatibility settings.
+   *
+   * @param \Drupal\ui_patterns\Definition\PatternDefinition $definition
+   *   Pattern definition array.
+   *
+   * @return array
+   *   Processed hook definition portion.
+   */
+  protected function processTemplate(PatternDefinition $definition) {
+    $return = [];
+    if ($this->config->get('backward_compatibility.use_old_template_names')) {
+      $return = [
+        'template' => 'patterns-' . str_replace('_', '-', $definition->id()),
+      ];
+    }
+    return $return;
   }
 
   /**

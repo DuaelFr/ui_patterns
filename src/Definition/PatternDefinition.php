@@ -17,7 +17,7 @@ class PatternDefinition extends PluginDefinition implements DerivablePluginDefin
   /**
    * Pattern prefix.
    */
-  const PATTERN_PREFIX = 'pattern_';
+  const PATTERN_PREFIX = 'pattern__';
 
   /**
    * Prefix for locally defined libraries.

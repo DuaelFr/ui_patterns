@@ -1,0 +1,13 @@
+# Schema for the configuration files of the UI Patterns module.
+
+ui_patterns.settings:
+  type: config_object
+  label: 'UI Patterns settings'
+  mapping:
+    backward_compatibility:
+      type: mapping
+      label: 'Backward compatibility settings'
+      mapping:
+        use_old_template_names:
+          type: boolean
+          label: 'Use old template names (with a single dash).'

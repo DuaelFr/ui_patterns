@@ -11,3 +11,12 @@
 function ui_patterns_update_8101() {
   \Drupal::service('module_installer')->install(['ui_patterns_library']);
 }
+
+/**
+ * Enable templates backward compatibility mode.
+ */
+function ui_patterns_update_8102() {
+  \Drupal::configFactory()->getEditable('ui_patterns.settings')
+    ->set('backward_compatibility.use_old_template_names', TRUE)
+    ->save(TRUE);
+}
